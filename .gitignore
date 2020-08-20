@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.drake
+.drake_history
+_drake.R
+archive
+documents
+data
