@@ -38,6 +38,7 @@ getting_top_10_intellihealth_code_table <-
       relocate(label, code) %>%
       DT::datatable(
         colnames = c("Label", "Code"),
+        rownames= FALSE,
         extensions = "FixedHeader",
         options = list(
           pageLength = 5,
