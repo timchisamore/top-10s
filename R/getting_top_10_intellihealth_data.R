@@ -17,7 +17,7 @@
 getting_top_10_intellihealth_data <-
   function(joined_intellihealth_data) {
     top_10_intellihealth_data <- joined_intellihealth_data %>%
-      filter(count >= 5) %>%
+      filter(count.x >= 5) %>%
       group_by(
         year,
         sex,

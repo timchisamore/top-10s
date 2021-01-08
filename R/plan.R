@@ -3,16 +3,16 @@ plan <- drake_plan(
     reading_intellihealth_data(intellihealth_data_path = paths),
     transform = map(
       paths = c(
-        file_in(!!here::here("data", "raw", "deaths.xlsx")),
-        file_in(!!here::here("data", "raw", "ed_visits.xlsx")),
-        file_in(!!here::here("data", "raw", "hospitalizations.xlsx")),
-        file_in(!!here::here("data", "raw", "population.xlsx"))
+        file_in(!!here::here("data", "raw", "deaths_data.xlsx")),
+        file_in(!!here::here("data", "raw", "ed_visits_data.xlsx")),
+        file_in(!!here::here("data", "raw", "hospitalizations_data.xlsx")),
+        file_in(!!here::here("data", "raw", "population_estimates_data.xlsx"))
       ),
       .names = c(
         "raw_deaths_data",
         "raw_ed_visits_data",
         "raw_hospitalizations_data",
-        "raw_population_data"
+        "raw_population_estimates_data"
       )
     )
   ),
@@ -25,21 +25,21 @@ plan <- drake_plan(
           "cleaning_deaths_data",
           "cleaning_ed_visits_data",
           "cleaning_hospitalizations_data",
-          "cleaning_population_data"
+          "cleaning_population_estimates_data"
         )
       ),
       .names = c(
         "clean_deaths_data",
         "clean_ed_visits_data",
         "clean_hospitalizations_data",
-        "clean_population_data"
+        "clean_population_estimates_data"
       )
     )
   ),
-  summarized_non_population_data = target(
-    summarizing_non_population_data(clean_non_population_data),
+  summarized_non_population_estimates_data = target(
+    summarizing_non_population_estimates_data(clean_non_population_estimates_data),
     transform = map(
-      clean_non_population_data = !!rlang::syms(
+      clean_non_population_estimates_data = !!rlang::syms(
         c(
           "clean_deaths_data",
           "clean_ed_visits_data",
@@ -53,11 +53,12 @@ plan <- drake_plan(
       )
     )
   ),
-  summarized_population_data = summarizing_population_data(clean_population_data),
+  summarized_population_estimates_data = summarizing_population_estimates_data(clean_population_estimates_data),
   joined_intellihealth_data = target(
-    joining_non_population_and_population_data(summarized_non_population_data, summarized_population_data),
+    joining_non_population_estimates_and_population_estimates_data(summarized_non_population_estimates_data, summarized_population_estimates_data),
     transform = map(
-      summarized_non_population_data,
+      summarized_non_population_estimates_data,
+      summarized_population_estimates_data,
       .names = c(
         "joined_deaths_data",
         "joined_ed_visits_data",

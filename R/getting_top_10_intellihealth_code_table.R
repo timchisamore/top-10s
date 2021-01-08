@@ -30,7 +30,7 @@ getting_top_10_intellihealth_code_table <-
         code = if_else(
           name %in% c("ED Visits", "Hospitalizations"),
           str_remove(code, "\\([A-Z]{1}[0-9]{2}-[A-Z]{1}[0-9]{2}\\)"),
-          str_remove(str_remove(code, "\\([0-9]{2}\\)"), "\\(APHEO\\)")
+          str_remove(str_remove(code, "\\([0-9]{2}\\)"), " \\(APHEO\\)")
         ),
         code = str_to_title(code)
       ) %>%
