@@ -2,10 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-.drake
-.drake_history
-_drake.R
+targets
+data
+documents
 miscellaneous
 archive
-documents
-data

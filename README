@@ -1,0 +1,21 @@
+This R Project is similar to work being done at Niagara Region Public
+Health (NRPH), who themselves found the idea externally. The goal is to take
+deaths, emergency department (ED) visits, and hospitalizations data and combine
+it with population estimates data to look at what the major causes of morbidity
+and mortality are in the area. Specifically, we aggregate the linelist data by
+year, sex, and age group and construct rate per 100,000s. This can inform future
+work by highlighting priority populations or lead to further examinations of
+high impact diseases.
+
+We chose to remove 88 and 99 codes from the deaths data and R00-R99 and Z00-Z99
+from the ED visits and hospitalizations data as they represent symptoms, signs,
+and abnormal clinical and laboratory findings, not elsewhere classified and
+factors influencing health status and contact with health services,
+respectively. These are not issues that public health actions can overtly
+address or influence. Further, we only include causes with a count of 5 or more
+in any combination of year, sex, and age group as otherwise, the rates will be
+unstable.
+
+This project can be run by puttin data into the ./data/raw folder and entering
+targets::tar_make() in the console. If there are issues, try entering
+targets::tar_destroy() and then targets::tar_make().
