@@ -1,4 +1,4 @@
-#' Reading intellihealth data
+#' Reading IntelliHealth data
 #'
 #' This function takes the path to our IntelliHealth data and a character of
 #' column types and reads the data in.
@@ -13,8 +13,10 @@
 #' @examples
 #' `reading_intellihealth_data(here::here("data", "raw", "ed-visits_data.xlsx"))`
 reading_intellihealth_data <- function(intellihealth_path, types) {
-  stopifnot("This specified data does not exist!" = fs::file_exists(intellihealth_path))
-  stopifnot("Types must be a character!" = is.character(types))
+  # asserting that the file exists
+  checkmate::assert_file_exists(x = intellihealth_path)
+  # asserting that the types argument is a character
+  checkmate::assert_character(x = types)
 
   readxl::read_xlsx(
     path = intellihealth_path,

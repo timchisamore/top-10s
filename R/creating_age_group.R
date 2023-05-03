@@ -11,7 +11,10 @@
 #' @examples
 #' `creating_age_group(age)`
 creating_age_group <- function(age) {
-  age_group <- santoku::chop(
+  # Asserting that age is numeric with a lowerbound of 0
+  checkmate::assert_numeric(x = age, lower = 0)
+
+  santoku::chop(
     x = age,
     breaks = c(15, 45, 65, 75, 85, Inf),
     labels = c("0-14", "15-44", "45-64", "65-74", "75-84", "85+")

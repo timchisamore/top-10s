@@ -1,23 +1,34 @@
 #' Cleaning ED visits data
 #'
 #' This function takes the raw ED visits data from IntelliHealth and cleans it
-#' by removing records with codes that are not meaningful to our analysis,
-#' creating a field for age groups, and creating a field for sex.
+#' by creating a field for age groups, creating a field for sex, and splitting
+#' code into code and name using regex.
 #'
-#' @param raw_ed_visits_data A tbl_df of raw ED visits IntelliHealth data.
+#' @param raw_ed_visits_data A tbl_df of raw ED visits data from IntelliHealth.
 #'
-#' @return A tbl_df of clean ED visits IntelliHealth data.
+#' @return A tbl_df of clean ED visits data.
 #' @export
 #'
 #' @examples
 #' `cleaning_ed_visits_data(raw_ed_visits_data)`
 cleaning_ed_visits_data <- function(raw_ed_visits_data) {
-  raw_ed_visits_data %>%
-    # removing observations with codes we do not want to include in our analysis
-    filter(str_starts(string = code, pattern = "([RZ]{1}[0-9]{2}-[RZ]{1}[0-9]{2})", negate = TRUE)) %>%
-    # creating age group and sex fields
+  # Asserting that raw_ed_visits_data is a tibble
+  checkmate::assert_tibble(x = raw_ed_visits_data)
+  # Asserting that the expected variables exist
+  checkmate::assert_set_equal(x = names(raw_ed_visits_data), y = c("year", "sex", "age", "code", "count", "measure"))
+
+  raw_ed_visits_data |>
     mutate(
       age_group = creating_age_group(age),
-      sex = creating_sex(sex)
-    )
+      sex = creating_sex(sex),
+      code = str_trim(code),
+      code = str_squish(code)
+    ) |>
+    extract(
+      col = code,
+      into = c("code", "name"),
+      regex = "\\(([A-Z]{1}[0-9]{2}-[A-Z]{1}[0-9]{2}|U)\\)\\s([[:print:]]+|Unknown)",
+      remove = TRUE
+    ) |>
+    relocate(year, sex, age, age_group, code, name, count, measure)
 }

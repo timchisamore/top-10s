@@ -1,31 +1,32 @@
 #' Joining aggregate data
 #'
-#' This function joins the aggregated deaths, ED visits, or hospitalizations
-#' data from IntelliHealth with the aggregated population estimates data from
-#' IntelliHealth on year, sex, and age group. It also calculates
-#' a rate using the count field from the aggregated deaths, ED visits, or
-#' hospitalizations IntelliHealth data and the population from the aggregated
-#' population IntelliHealth data.
+#' This function joins the aggregate ED visits, hospitalizations, or deaths
+#' data with the aggregate population estimates data by year, sex, and
+#' age group.
 #'
-#' @param aggregate_non_population_estimates_data A tbl_df of aggregate deaths,
-#' ED visits, or hospitalizations IntelliHealth data.
-#' @param aggregate_population_estimates_data A tbl_df of aggregate population
-#' estimates IntelliHealth data.
-#'
-#' @return A tbl_df of aggregated deaths, ED visits, or hospitalizations
-#' IntelliHealth data joined to aggregated population estimates IntelliHealth
+#' @param aggregate_numerator_data A tbl_df of aggregate ED visits,
+#' hospitalizations, or deaths data.
+#' @param aggregate_denominator_data A tbl_df of aggregate population estimates
 #' data.
+#'
+#' @return A tbl_df of aggregate ED visits, hospitalizations, or deaths data
+#' joined to aggregate population estimates data.
 #' @export
 #'
 #' @examples
-#' joining_aggregate_data(aggregate_non_population_estimates_data, aggregate_population_estimates_data)
+#' `joining_aggregate_data(aggregate_numerator_data, aggregate_denominator_data)`
 joining_aggregate_data <-
-  function(aggregate_non_population_estimates_data,
-           aggregate_population_estimates_data) {
-    aggregate_non_population_estimates_data %>%
-      inner_join(aggregate_population_estimates_data,
-        by = c("year", "sex", "age_group"),
-        suffix = c("_num", "_denom")
-      ) %>%
-      mutate(rate = (count_num / count_denom))
+  function(aggregate_numerator_data,
+           aggregate_denominator_data) {
+    # Asserting that aggregate_numerator_data is a tibble
+    checkmate::assert_tibble(x = aggregate_numerator_data)
+    # Asserting that aggregate_denominator_data is a tibble
+    checkmate::assert_tibble(x = aggregate_denominator_data)
+
+    inner_join(
+      x = aggregate_numerator_data,
+      y = aggregate_denominator_data,
+      by = c("year", "sex", "age_group"),
+      suffix = c("_num", "_denom")
+    )
   }
