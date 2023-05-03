@@ -17,13 +17,15 @@ creating_top_10_appearances <- function(ranked_data) {
   
   sum_data <- ranked_data |>
     filter(between(x = rank, left = 1, right = 10)) |>
-    count(type,
-          sex,
-          age_group,
-          code_scheme,
-          code,
-          name,
-          name = "number_of_top_10_appearances")
+    group_by(type,
+             sex,
+             age_group,
+             code_scheme,
+             code,
+             name) |>
+    summarize(number_of_top_10_appearances = n(),
+              number_of_events = sum(count_num),
+              .groups = "drop")
   
   year_data <- ranked_data |>
     group_by(type) |>
@@ -32,5 +34,6 @@ creating_top_10_appearances <- function(ranked_data) {
   sum_data |>
     left_join(year_data,
               by = "type") |>
-    mutate(proportion_of_top_10_appearances = number_of_top_10_appearances / number_of_years)
+    mutate(proportion_of_top_10_appearances = number_of_top_10_appearances / number_of_years) |>
+    relocate(c(number_of_years, proportion_of_top_10_appearances), .after = number_of_top_10_appearances)
 }
